@@ -88,8 +88,13 @@ export default function CampaignPage() {
     if (!songTitle.trim()) errs.songTitle = "Required";
     else if (songTitle.length > 200) errs.songTitle = "Max 200 characters";
     if (!tiktokHandle.trim()) errs.tiktokHandle = "Required";
-    else if (!/^@?[\w.]{1,24}$/.test(tiktokHandle.trim().replace(/^@/, "")))
-      errs.tiktokHandle = "Invalid TikTok handle";
+    else {
+      let handle = tiktokHandle.trim().replace(/^@/, "");
+      const urlMatch = handle.match(/(?:tiktok\.com\/@?|vm\.tiktok\.com\/@?)([\w.]+)/i);
+      if (urlMatch) handle = urlMatch[1];
+      if (!/^[\w.]{2,24}$/.test(handle))
+        errs.tiktokHandle = "Enter a valid TikTok handle or profile URL";
+    }
     if (!whatsapp.trim()) errs.whatsapp = "Required";
     else if (!/^\+?[0-9]{7,15}$/.test(whatsapp.trim().replace(/[\s\-]/g, "")))
       errs.whatsapp = "Enter a valid phone number (e.g. +233 XX XXX XXXX)";
