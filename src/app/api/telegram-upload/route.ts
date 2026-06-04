@@ -21,7 +21,7 @@ const ALLOWED_MIMES_GLOBAL = new Set([
 ]);
 
 const BUCKET_MIMES: Record<string, Set<string>> = {
-  "campaign-audio": new Set(["audio/mpeg", "audio/wav", "audio/mp3", "audio/wave"]),
+  "campaign-audio": new Set(["audio/mpeg", "audio/wav", "audio/mp3", "audio/wave", "video/mp4"]),
   "campaign-reference-videos": new Set(["video/mp4", "video/quicktime"]),
   "campaign-payment-proof": new Set(["image/jpeg", "image/png", "image/webp"]),
   "campaign-editor-submissions": new Set(["video/mp4", "video/quicktime", "image/jpeg", "image/png", "application/zip", "application/x-zip-compressed"]),
