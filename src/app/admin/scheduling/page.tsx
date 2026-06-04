@@ -13,6 +13,7 @@ import {
 import {
   logCampaignScheduled, logTikTokSubmitted, logTikTokVerified, logCampaignMarkedLive,
 } from "@/lib/activity-log";
+import { getSiteUrl } from "@/lib/config";
 
 const STATUS_COLORS: Record<string, string> = {
   "Not Scheduled": "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
@@ -163,7 +164,7 @@ export default function AdminSchedulingPage() {
 
   const generateTaskLink = (sch: PostingSchedule) => {
     const task = createPostSubmissionTask(sch.id, sch.campaignId, sch.platformName, sch.assignedPoster);
-    const link = `${window.location.origin}/post-submission/${task.taskId}`;
+    const link = `${getSiteUrl()}/post-submission/${task.taskId}`;
     navigator.clipboard.writeText(link).catch(() => {});
     setCopiedId(sch.id); setTimeout(() => setCopiedId(null), 2000);
   };

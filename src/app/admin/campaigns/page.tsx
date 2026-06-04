@@ -12,6 +12,7 @@ import { addAlert } from "@/components/AdminNotifications";
 import PaymentReviewModal from "@/components/PaymentReviewModal";
 import { createReviewToken, getReviewTokenByCampaign, getArtistReviews } from "@/lib/artistReview";
 import { STATUS_META, PRIORITY_META, StatusBadge, PriorityBadge, StatusDot } from "@/lib/statusConfig";
+import { getSiteUrl } from "@/lib/config";
 import ActivityTimeline from "@/components/ActivityTimeline";
 import {
   logEditorAssigned, logAdminApproved, logRevisionRequested,
@@ -438,7 +439,7 @@ export default function CampaignsPage() {
                                   await handleUpdate(selected.campaignId, { editor: editor.name, status: "Assigned" });
                                   saveAssignment(editor.id, selected.campaignId);
                                   const taskId = createEditorTask(editor.id, selected.campaignId);
-                                  const origin = typeof window !== "undefined" ? window.location.origin : "";
+                                  const origin = getSiteUrl();
                                   const mediaUrl = `${origin}/editor-task/${taskId}/media`;
                                   const submitUrl = `${origin}/editor-task/${taskId}`;
                                   const msg = buildTelegramMessage(editor, {
@@ -574,7 +575,7 @@ export default function CampaignsPage() {
                         const editor = getEditorByCampaignEditor(selected.editor);
                         if (!editor) return null;
                         const taskId = createEditorTask(editor.id, selected.campaignId);
-                        const origin = typeof window !== "undefined" ? window.location.origin : "";
+                        const origin = getSiteUrl();
                         const mediaUrl = `${origin}/editor-task/${taskId}/media`;
                         const submitUrl = `${origin}/editor-task/${taskId}`;
                         const msg = buildTelegramMessage(editor, {
@@ -638,7 +639,7 @@ export default function CampaignsPage() {
                           : getReviewTokenByCampaign(selected.campaignId);
                         const reviews = getArtistReviews(selected.campaignId);
                         const lastReview = reviews[0];
-                        const origin = typeof window !== "undefined" ? window.location.origin : "";
+                        const origin = getSiteUrl();
                         const reviewUrl = rt ? `${origin}/review/${rt.token}` : "";
                         return (
                           <div className="rounded-xl border border-pink-500/20 bg-pink-500/[0.04] backdrop-blur-xl p-4">

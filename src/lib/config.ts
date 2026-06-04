@@ -27,6 +27,16 @@ export const SMTP_PASS = req("SMTP_PASS", process.env.SMTP_PASS);
 export const SMTP_FROM = process.env.SMTP_FROM || "sharpconnectinfo@gmail.com";
 export const SMTP_ADMIN_TO = process.env.SMTP_ADMIN_TO || "sharpconnectinfo@gmail.com";
 
+/** Get the canonical site URL for shareable links (editor tasks, review links, etc.).
+ *  Uses NEXT_PUBLIC_SITE_URL env var, falls back to sharpconnect.vercel.app.
+ *  On client, also checks window.location.origin for local dev convenience. */
+export function getSiteUrl(): string {
+  if (typeof window !== "undefined" && !process.env.NEXT_PUBLIC_SITE_URL) {
+    return window.location.origin;
+  }
+  return process.env.NEXT_PUBLIC_SITE_URL || "https://sharpconnect.vercel.app";
+}
+
 let logged = false;
 
 /** Call once at server startup to log missing required env vars. */
