@@ -1,6 +1,4 @@
-import { supabase, isSupabaseConfigured } from "./supabase";
-import { isServerAvailable, apiGet, apiGetById, apiUpsert, apiInsert, apiUpdate } from "./data-api";
-import type { CampaignRow } from "./database.types";
+import { isServerAvailable, apiGet, apiUpsert, apiUpdate } from "./data-api";
 
 export interface Campaign {
   campaignId: string;
@@ -56,20 +54,20 @@ export type CampaignStatus =
 function rowToCampaign(row: Record<string, any>): Campaign {
   return {
     campaignId: row.campaignId ?? row.campaign_id,
-    status: row.status ?? row.campaign_status as CampaignStatus,
+    status: row.status ?? row.campaign_status,
     submittedAt: row.submittedAt ?? row.created_at,
     artistName: row.artistName ?? row.artist_name ?? "",
     songTitle: row.songTitle ?? row.song_title ?? "",
     tiktokHandle: row.tiktokHandle ?? row.tiktok_handle,
     instagramHandle: row.instagramHandle ?? row.instagram_handle,
-    whatsapp: row.whatsapp ?? row.whatsapp,
-    email: row.email ?? row.email,
+    whatsapp: row.whatsapp,
+    email: row.email,
     packageId: row.packageId ?? row.package_id,
     packageName: row.packageName ?? row.package_name,
     packagePrice: row.packagePrice ?? row.package_price,
     soundOption: row.soundOption ?? row.sound_option,
     soundFee: row.soundFee ?? row.sound_fee,
-    total: row.total ?? row.total,
+    total: row.total,
     creativeDirection: row.creativeDirection ?? row.creative_direction,
     selectedTags: row.selectedTags ?? row.selected_tags ?? [],
     hasAudio: row.hasAudio ?? row.has_audio,
@@ -79,9 +77,9 @@ function rowToCampaign(row: Record<string, any>): Campaign {
     amountSent: row.amountSent ?? row.amount_sent,
     transactionId: row.transactionId ?? row.transaction_id,
     paymentMethod: row.paymentMethod ?? row.payment_method,
-    editor: row.editor ?? row.editor,
-    priority: (row.priority ?? row.priority as Campaign["priority"]) || "Medium",
-    notes: row.notes ?? row.notes ?? "",
+    editor: row.editor,
+    priority: (row.priority || "Medium") as Campaign["priority"],
+    notes: row.notes ?? "",
     audioUrl: row.audioUrl ?? row.audio_url ?? "",
     videoUrl: row.videoUrl ?? row.video_url ?? "",
     tiktokSoundLink: row.tiktokSoundLink ?? row.tiktok_sound_link ?? "",
@@ -108,24 +106,17 @@ function lsSetCampaigns(data: Campaign[]) {
 // ─── GET CAMPAIGNS ────────────────────────────────────────────
 
 export async function getCampaigns(limit?: number): Promise<Campaign[]> {
+  let campaigns: Campaign[] = [];
   try {
     if (await isServerAvailable()) {
       const data = await apiGet<any>("campaigns");
-      const campaigns = data.map(rowToCampaign);
-      if (campaigns.length > 0) return limit ? campaigns.slice(0, limit) : campaigns;
+      campaigns = data.map(rowToCampaign);
     }
-  } catch {}
-  if (isSupabaseConfigured) {
-    let query = supabase
-      .from("campaigns")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (limit) query = query.limit(limit);
-    const { data, error } = await query;
-    if (!error && data) return data.map(rowToCampaign);
+  } catch (e) { console.error("[adminData] getCampaigns API failed:", e); }
+  if (campaigns.length === 0) {
+    campaigns = lsGetCampaigns();
   }
-  const all = lsGetCampaigns();
-  return limit ? all.slice(0, limit) : all;
+  return limit ? campaigns.slice(0, limit) : campaigns;
 }
 
 export async function getCampaign(id: string): Promise<Campaign | null> {
@@ -134,15 +125,7 @@ export async function getCampaign(id: string): Promise<Campaign | null> {
       const data = await apiGet<any>("campaigns", { key: "campaignId", value: id });
       if (data && data.length > 0) return rowToCampaign(data[0]);
     }
-  } catch {}
-  if (isSupabaseConfigured) {
-    const { data, error } = await supabase
-      .from("campaigns")
-      .select("*")
-      .eq("campaign_id", id)
-      .single();
-    if (!error && data) return rowToCampaign(data);
-  }
+  } catch (e) { console.error("[adminData] getCampaign API failed:", e); }
   const all = lsGetCampaigns();
   return all.find((c) => c.campaignId === id) || null;
 }
@@ -154,42 +137,7 @@ export async function updateCampaign(id: string, updates: Partial<Campaign>): Pr
     if (await isServerAvailable()) {
       await apiUpdate("campaigns", id, updates);
     }
-  } catch {}
-  if (isSupabaseConfigured) {
-    const dbUpdates: Record<string, any> = {};
-    if (updates.status !== undefined) {
-      dbUpdates.campaign_status = updates.status;
-      dbUpdates.payment_status = updates.status;
-    }
-    if (updates.editor !== undefined) dbUpdates.editor = updates.editor;
-    if (updates.priority !== undefined) dbUpdates.priority = updates.priority;
-    if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
-    if (updates.senderName !== undefined) dbUpdates.sender_name = updates.senderName;
-    if (updates.senderNumber !== undefined) dbUpdates.sender_number = updates.senderNumber;
-    if (updates.amountSent !== undefined) dbUpdates.amount_sent = updates.amountSent;
-    if (updates.transactionId !== undefined) dbUpdates.transaction_id = updates.transactionId;
-    if (updates.paymentMethod !== undefined) dbUpdates.payment_method = updates.paymentMethod;
-    if (updates.artistName !== undefined) dbUpdates.artist_name = updates.artistName;
-    if (updates.songTitle !== undefined) dbUpdates.song_title = updates.songTitle;
-    if (updates.tiktokHandle !== undefined) dbUpdates.tiktok_handle = updates.tiktokHandle;
-    if (updates.instagramHandle !== undefined) dbUpdates.instagram_handle = updates.instagramHandle;
-    if (updates.whatsapp !== undefined) dbUpdates.whatsapp = updates.whatsapp;
-    if (updates.email !== undefined) dbUpdates.email = updates.email;
-    if (updates.packageId !== undefined) dbUpdates.package_id = updates.packageId;
-    if (updates.packageName !== undefined) dbUpdates.package_name = updates.packageName;
-    if (updates.packagePrice !== undefined) dbUpdates.package_price = updates.packagePrice;
-    if (updates.soundOption !== undefined) dbUpdates.sound_option = updates.soundOption;
-    if (updates.soundFee !== undefined) dbUpdates.sound_fee = updates.soundFee;
-    if (updates.total !== undefined) dbUpdates.total = updates.total;
-    if (updates.creativeDirection !== undefined) dbUpdates.creative_direction = updates.creativeDirection;
-    if (updates.selectedTags !== undefined) dbUpdates.selected_tags = updates.selectedTags;
-    if (updates.hasAudio !== undefined) dbUpdates.has_audio = updates.hasAudio;
-    if (updates.hasVideo !== undefined) dbUpdates.has_video = updates.hasVideo;
-    if (updates.audioUrl !== undefined) dbUpdates.audio_url = updates.audioUrl;
-    if (updates.videoUrl !== undefined) dbUpdates.video_url = updates.videoUrl;
-    if (updates.tiktokSoundLink !== undefined) dbUpdates.tiktok_sound_link = updates.tiktokSoundLink;
-    await supabase.from("campaigns").update(dbUpdates).eq("campaign_id", id);
-  }
+  } catch (e) { console.error("[adminData] updateCampaign API failed:", e); }
 
   const campaigns = lsGetCampaigns();
   const updated = campaigns.map((c) => (c.campaignId === id ? { ...c, ...updates } : c));
@@ -247,42 +195,7 @@ export async function saveCampaign(data: {
     if (await isServerAvailable()) {
       await apiUpsert("campaigns", campaign);
     }
-  } catch {}
-
-  if (isSupabaseConfigured) {
-    const { error } = await supabase.from("campaigns").insert({
-      campaign_id: data.campaignId,
-      artist_name: data.artistName || "",
-      song_title: data.songTitle || "",
-      tiktok_handle: data.tiktokHandle || "",
-      instagram_handle: data.instagramHandle || "",
-      whatsapp: data.whatsapp || "",
-      email: data.email || "",
-      package_id: data.packageId || "",
-      package_name: data.packageName || "",
-      package_price: data.packagePrice || 0,
-      sound_option: data.soundOption || "original",
-      sound_fee: data.soundFee || 0,
-      total: data.total || 0,
-      creative_direction: data.creativeDirection || "",
-      selected_tags: data.selectedTags || [],
-      has_audio: data.hasAudio || false,
-      has_video: data.hasVideo || false,
-      sender_name: data.senderName || "",
-      sender_number: data.senderNumber || "",
-      amount_sent: data.amountSent || "",
-      transaction_id: data.transactionId || "",
-      payment_method: data.paymentMethod || "",
-      audio_url: data.audioUrl || "",
-      video_url: data.videoUrl || "",
-      tiktok_sound_link: data.tiktokSoundLink || "",
-      campaign_status: data.status || "Pending Verification",
-      payment_status: data.status || "Pending Verification",
-      created_at: data.submittedAt || new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    });
-    if (error) throw new Error(`Failed to save campaign: ${error.message}`);
-  }
+  } catch (e) { console.error("[adminData] saveCampaign API upsert failed:", e); }
 
   const existing = lsGetCampaigns();
   existing.push(campaign);
