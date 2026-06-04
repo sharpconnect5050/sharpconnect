@@ -68,6 +68,7 @@ function generateId() {
 async function saveSubmission(submission: any, status: string, paymentRef: string) {
   await saveCampaign({ ...submission, status, paymentReference: paymentRef });
   sessionStorage.setItem("sharpconnect_submitted", JSON.stringify({ ...submission, status }));
+  sessionStorage.removeItem("sharpconnect_campaign");
 }
 
 type PaymentMode = "momo" | "manual";

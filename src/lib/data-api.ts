@@ -3,13 +3,12 @@ const API_BASE = "/api/data";
 let _serverAvailable: boolean | null = null;
 
 export async function isServerAvailable(): Promise<boolean> {
-  if (_serverAvailable !== null) return _serverAvailable;
+  if (_serverAvailable === true) return true;
   try {
-    const res = await fetch(`${API_BASE}/campaigns`, { method: "GET", signal: AbortSignal.timeout(3000) });
+    const res = await fetch(`${API_BASE}/campaigns`, { method: "GET", signal: AbortSignal.timeout(5000) });
     _serverAvailable = res.ok;
     return _serverAvailable;
   } catch (e) {
-    _serverAvailable = false;
     console.warn("[data-api] server unavailable:", e);
     return false;
   }
