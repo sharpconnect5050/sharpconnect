@@ -28,7 +28,7 @@ const MAX_FILE_SIZES: Record<string, number> = {
 };
 
 const ALLOWED_MIMES: Record<string, string[]> = {
-  [BUCKETS.AUDIO]: ["audio/mpeg", "audio/wav", "audio/mp3", "audio/wave"],
+  [BUCKETS.AUDIO]: ["audio/mpeg", "audio/wav", "audio/mp3", "audio/wave", "video/mp4"],
   [BUCKETS.REFERENCE_VIDEO]: ["video/mp4", "video/quicktime"],
   [BUCKETS.PAYMENT_PROOF]: ["image/jpeg", "image/png", "image/webp"],
   [BUCKETS.EDITOR_SUBMISSION]: ["video/mp4", "video/quicktime", "image/jpeg", "image/png", "application/zip", "application/x-zip-compressed"],

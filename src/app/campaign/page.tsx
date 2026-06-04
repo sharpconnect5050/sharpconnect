@@ -412,8 +412,8 @@ export default function CampaignPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FileUpload
                   label="Audio File"
-                  hint="MP3, WAV (optional if TikTok link provided)"
-                  accept="audio/*"
+                  hint="MP3, WAV, MP4 (optional if TikTok link provided)"
+                  accept="audio/*,video/mp4"
                   bucket={BUCKETS.AUDIO}
                   file={audioFile}
                   setFile={setAudioFile}
