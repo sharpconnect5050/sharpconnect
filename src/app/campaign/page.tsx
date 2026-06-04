@@ -93,8 +93,8 @@ export default function CampaignPage() {
     if (!whatsapp.trim()) errs.whatsapp = "Required";
     else if (!/^\+?[0-9]{7,15}$/.test(whatsapp.trim().replace(/[\s\-]/g, "")))
       errs.whatsapp = "Enter a valid phone number (e.g. +233 XX XXX XXXX)";
-    if (!email.trim() || !/\S+@\S+\.\S+/.test(email))
-      errs.email = "Valid email required";
+    if (email.trim() && !/\S+@\S+\.\S+/.test(email))
+      errs.email = "Invalid email format";
     if (!selectedPackage) errs.package = "Select a package";
     if (!audioFile && !tiktokSoundLink.trim()) errs.audio = "Upload audio or provide a TikTok sound link";
     else if (tiktokSoundLink.trim() && !/^https?:\/\/(www\.)?(vm\.)?tiktok\.com\/.+/.test(tiktokSoundLink.trim()))
@@ -283,7 +283,7 @@ export default function CampaignPage() {
                   { label: "TikTok Handle", value: tiktokHandle, setter: setTiktokHandle, key: "tiktokHandle", required: true },
                   { label: "Instagram Handle (optional)", value: instagramHandle, setter: setInstagramHandle, key: "instagramHandle", required: false },
                   { label: "WhatsApp Number", value: whatsapp, setter: setWhatsapp, key: "whatsapp", required: true },
-                  { label: "Email Address", value: email, setter: setEmail, key: "email", type: "email", required: true },
+                  { label: "Email Address (optional)", value: email, setter: setEmail, key: "email", type: "email", required: false },
                 ].map((field) => (
                   <div key={field.key} className="relative">
                     <input
