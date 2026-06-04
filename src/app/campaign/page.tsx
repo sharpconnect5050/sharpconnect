@@ -89,11 +89,13 @@ export default function CampaignPage() {
     else if (songTitle.length > 200) errs.songTitle = "Max 200 characters";
     if (!tiktokHandle.trim()) errs.tiktokHandle = "Required";
     else {
-      let handle = tiktokHandle.trim().replace(/^@/, "");
-      const urlMatch = handle.match(/(?:tiktok\.com\/@?|vm\.tiktok\.com\/@?)([\w.]+)/i);
-      if (urlMatch) handle = urlMatch[1];
-      if (!/^[\w.]{2,24}$/.test(handle))
-        errs.tiktokHandle = "Enter a valid TikTok handle or profile URL";
+      let raw = tiktokHandle.trim();
+      if (raw.startsWith("@")) raw = raw.slice(1);
+      const urlMatch = raw.match(/tiktok\.com\/@?([\w.]+)/i);
+      if (urlMatch) raw = urlMatch[1];
+      raw = raw.replace(/[^a-zA-Z0-9_.]/g, "");
+      if (raw.length < 2 || raw.length > 30)
+        errs.tiktokHandle = "Enter a valid TikTok handle (2-30 characters)";
     }
     if (!whatsapp.trim()) errs.whatsapp = "Required";
     else if (!/^\+?[0-9]{7,15}$/.test(whatsapp.trim().replace(/[\s\-]/g, "")))
