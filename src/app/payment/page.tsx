@@ -438,7 +438,7 @@ export default function PaymentPage() {
             </div>
             <button
               onClick={handleCopy}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all touch-target ${
+              className={`flex items-center gap-2 px-4 py-3.5 rounded-xl text-xs font-semibold transition-all touch-target ${
                 copied
                   ? "bg-emerald-500/15 text-emerald-400"
                   : "bg-yellow-500/15 text-yellow-400 active:scale-95 hover:bg-yellow-500/20"

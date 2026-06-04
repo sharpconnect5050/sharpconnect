@@ -126,7 +126,7 @@ export default function Pricing() {
 
                 <a
                   href="/campaign"
-                  className={`block w-full text-center py-3 rounded-xl font-semibold text-sm transition-all duration-200 ${
+                  className={`block w-full text-center py-4 rounded-xl font-semibold text-sm transition-all duration-200 ${
                     pkg.highlighted
                       ? "bg-red-600 hover:bg-red-500 text-white hover:shadow-lg hover:shadow-red-500/25"
                       : "border border-white/[0.1] text-white hover:bg-white/[0.04]"

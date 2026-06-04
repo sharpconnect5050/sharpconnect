@@ -59,7 +59,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-zinc-400 hover:text-white transition-colors"
+            className="md:hidden p-3 text-zinc-400 hover:text-white transition-colors"
             aria-label="Menu"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +88,7 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block text-sm text-zinc-400 hover:text-white transition-colors py-3 px-3 rounded-xl hover:bg-white/[0.03]"
+                  className="block text-sm text-zinc-400 hover:text-white transition-colors py-3.5 px-3 rounded-xl hover:bg-white/[0.03]"
                 >
                   {link.label}
                 </a>
@@ -96,7 +96,7 @@ export default function Navbar() {
               <a
                 href="/campaign"
                 onClick={() => setMobileOpen(false)}
-                className="block text-center text-sm font-semibold px-5 py-3 rounded-full bg-red-600 hover:bg-red-500 text-white transition-all mt-3"
+                className="block text-center text-sm font-semibold px-5 py-3.5 rounded-full bg-red-600 hover:bg-red-500 text-white transition-all mt-3"
               >
                 Start Campaign
               </a>
