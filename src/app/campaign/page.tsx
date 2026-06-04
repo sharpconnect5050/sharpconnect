@@ -307,7 +307,7 @@ export default function CampaignPage() {
                     />
                     <label
                       htmlFor={field.key}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-zinc-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-[10px] peer-focus:text-red-400"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-zinc-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-not-placeholder-shown:top-3 peer-not-placeholder-shown:text-[10px] peer-not-placeholder-shown:text-red-400 peer-focus:top-3 peer-focus:text-[10px] peer-focus:text-red-400"
                     >
                       {field.label}
                       {field.required && (
