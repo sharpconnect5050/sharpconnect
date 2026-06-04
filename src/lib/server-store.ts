@@ -9,7 +9,7 @@ const ALLOWED_COLLECTIONS = [
 
 function getClient() {
   const client = createAdminClient();
-  if (!client) throw new Error("Supabase admin client not configured");
+  if (!client) throw new Error("Supabase admin client not configured — set SUPABASE_SERVICE_ROLE_KEY");
   return client;
 }
 
